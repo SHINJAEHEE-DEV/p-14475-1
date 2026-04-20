@@ -16,7 +16,7 @@ public class Calc {
                 result = num1 + num2 + num3;
                 break;
             case "-":
-                result = num1 - num2;
+                result = num1 - num2 + num3;
         }
         return result;
     }
