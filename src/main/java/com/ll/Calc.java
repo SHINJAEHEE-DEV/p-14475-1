@@ -25,7 +25,6 @@ public class Calc {
             count ++;
         }
 
-
        return result;
     }
 
