@@ -1,24 +1,32 @@
 package com.ll;
 
+import java.util.Arrays;
+
 public class Calc {
     public static int run(String expression) {
-        String[] expressionBits = expression.split(" ");
-
-        int num1 = Integer.parseInt(expressionBits[0]);
-        int num2 = Integer.parseInt(expressionBits[2]);
-        int num3 = Integer.parseInt(expressionBits[4]);
-
-        String operationSymbol = expressionBits[1];
-
         int result = 0;
-        switch (operationSymbol) {
-            case "+":
-                result = num1 + num2 + num3;
-                break;
-            case "-":
-                result = num1 - num2 + num3;
+        String[] expressionArr = expression.split(" ");
+        int[] numbers =  Arrays.stream(expressionArr)
+                .filter(s -> s.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+        String[] operationSymbols = Arrays.stream(expressionArr)
+                .filter(s -> s.matches("[+-/*]"))
+                .toArray(String[]::new);
+        result = numbers[0];
+        int count = 1;
+        for(String op : operationSymbols){
+            switch (op){
+                case "+" -> result += numbers[count];
+                case "-" -> result -= numbers[count];
+                case "*" -> result *= numbers[count];
+                case "/" -> result /= numbers[count];
+            }
+            count ++;
         }
-        return result;
+
+
+       return result;
     }
 
 }
