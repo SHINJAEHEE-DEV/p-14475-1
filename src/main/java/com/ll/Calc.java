@@ -7,7 +7,7 @@ public class Calc {
         int result = 0;
         String[] expressionArr = expression.split(" ");
         int[] numbers =  Arrays.stream(expressionArr)
-                .filter(s -> s.matches("\\d+"))
+                .filter(s -> s.matches("-?\\d+"))
                 .mapToInt(Integer::parseInt)
                 .toArray();
         String[] operationSymbols = Arrays.stream(expressionArr)
