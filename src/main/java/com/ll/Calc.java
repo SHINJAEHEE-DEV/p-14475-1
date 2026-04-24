@@ -7,6 +7,9 @@ public class Calc {
 
         return result;
     }
+
+
+
     public static int devide(String expression) {
         expression = expression.trim();
 
@@ -26,7 +29,6 @@ public class Calc {
             else if (c == '(') level--;
 
             if (level == 0) {
-                // " - " 또는 " + " 처럼 앞뒤 문맥을 확인하여 연산자인지 판별
                 if ((c == '+' || c == '-') && i > 0 && expression.charAt(i - 1) == ' ') {
                     String left = expression.substring(0, i).trim();
                     String right = expression.substring(i + 1).trim();
@@ -55,14 +57,17 @@ public class Calc {
     }
 
     private static boolean isWrapped(String expression) {
-       // 괄호가 짝이 맞는지 확인하는 방법: '('의 개수와 ')'의 개수가 같아야 함
-        return expression.chars()
-                .filter(ch -> ch == '(')
-                .count()
-                ==
-                expression.chars()
-                .filter(ch -> ch == ')')
-                .count();
+        int level = 0;
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+            if (c == '(') level++;
+            else if (c == ')') level--;
+
+            // 마지막 글자가 아닌데 level이 0이 되었다면,
+            // 이는 (1+2) + (3+4) 처럼 중간에 괄호가 닫혔다는 뜻!
+            if (level == 0 && i < expression.length() - 1) return false;
+        }
+        return level == 0;
     }
 
 
