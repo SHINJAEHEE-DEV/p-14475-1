@@ -8,12 +8,13 @@ public class Calc {
         return result;
     }
 
-
-
     public static int devide(String expression) {
         expression = expression.trim();
 
-        //전체 괄호 제거용
+       //괄호앞 음수 변경
+        expression = expression.replaceAll("\\-\\(", "-1 * (");
+
+
         if (expression.startsWith("(") && expression.endsWith(")")) {
             if (isWrapped(expression)) {
                 return devide(expression.substring(1, expression.length() - 1));
@@ -29,28 +30,35 @@ public class Calc {
             else if (c == '(') level--;
 
             if (level == 0) {
-                if ((c == '+' || c == '-') && i > 0 && expression.charAt(i - 1) == ' ') {
+                // 음수는 양쪽으로 공백이 있으므로 이걸 조건으로 구별
+                if ((c == '+' || c == '-') && i > 0 && i < expression.length() - 1
+                        && expression.charAt(i - 1) == ' ' && expression.charAt(i + 1) == ' ') {
+
                     String left = expression.substring(0, i).trim();
                     String right = expression.substring(i + 1).trim();
                     return c == '+' ? devide(left) + devide(right) : devide(left) - devide(right);
                 }
             }
         }
+
+        level = 0;
+
+
         for (int i = expression.length() - 1; i >= 0; i--) {
             char c = expression.charAt(i);
             if (c == ')') level++;
             else if (c == '(') level--;
 
             if (level == 0) {
-                // " - " 또는 " + " 처럼 앞뒤 문맥을 확인하여 연산자인지 판별
-                if ((c == '*' || c == '/') && i > 0 && expression.charAt(i - 1) == ' ') {
+                if ((c == '*' || c == '/') && i > 0 && i < expression.length() - 1
+                        && expression.charAt(i - 1) == ' ' && expression.charAt(i + 1) == ' ') {
+
                     String left = expression.substring(0, i).trim();
                     String right = expression.substring(i + 1).trim();
                     return c == '*' ? devide(left) * devide(right) : devide(left) / devide(right);
                 }
             }
         }
-
 
 
         return Integer.parseInt(expression);
@@ -64,11 +72,9 @@ public class Calc {
             else if (c == ')') level--;
 
             // 마지막 글자가 아닌데 level이 0이 되었다면,
-            // 이는 (1+2) + (3+4) 처럼 중간에 괄호가 닫혔다는 뜻!
+            // 이는 (1+2) + (3+4) 처럼 중간에 괄호가 닫혔다는 뜻
             if (level == 0 && i < expression.length() - 1) return false;
         }
         return level == 0;
     }
-
-
 }
